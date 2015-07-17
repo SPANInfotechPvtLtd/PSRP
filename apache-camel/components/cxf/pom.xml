@@ -5,7 +5,7 @@
     <groupId>com.spn.psrp.apache.camel.components</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.spn.psrp.apache.camel.components</groupId>
+  <groupId>com.spn.psrp.apache.camel.components.cxf</groupId>
   <artifactId>cxf</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 </project>
