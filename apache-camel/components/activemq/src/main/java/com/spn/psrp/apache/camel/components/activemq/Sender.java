@@ -28,7 +28,7 @@ public class Sender {
 	    	            connection.start();
 	    	            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 	    	            destination = session.createQueue("SAMPLEQUEUE");
-	    	           producer = session.createProducer(destination);
+	    	            producer = session.createProducer(destination);
 	    	            TextMessage message = session.createTextMessage();
 	    	            message.setText("Hello ...This is a sample message..sending from FirstClient");
 	    	            producer.send(message);
