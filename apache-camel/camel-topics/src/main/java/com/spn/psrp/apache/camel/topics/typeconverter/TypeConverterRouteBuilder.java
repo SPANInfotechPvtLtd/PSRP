@@ -3,7 +3,6 @@ package com.spn.psrp.apache.camel.topics.typeconverter;
 import org.apache.camel.builder.RouteBuilder;
 
 public class TypeConverterRouteBuilder extends RouteBuilder{
-	
             @Override
             public void configure() throws Exception {
                 onException(IllegalArgumentException.class)

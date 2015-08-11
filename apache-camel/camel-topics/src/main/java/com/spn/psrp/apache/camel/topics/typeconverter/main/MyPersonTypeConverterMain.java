@@ -10,7 +10,6 @@ import com.spn.psrp.apache.camel.topics.typeconverter.TypeConverterRouteBuilder;
 
 
 public class MyPersonTypeConverterMain {
-	
 	ProducerTemplate template;
 	public static void main( String[] args )
     {
