@@ -1,6 +1,7 @@
 package com.spn.psrp.apache.camel.topics.typeconverter;
 
 public class MyPerson {
+	
     private String firstName;
     private String lastName;
 

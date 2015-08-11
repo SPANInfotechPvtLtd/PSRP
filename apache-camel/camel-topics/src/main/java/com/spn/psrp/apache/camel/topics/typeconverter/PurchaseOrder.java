@@ -8,6 +8,7 @@ import java.math.BigDecimal;
  */
 public class PurchaseOrder {
 
+	
     private final String name;
     private final BigDecimal price;
     private final int amount;
