@@ -16,6 +16,8 @@
   <name>${application-name} :: topics</name>
 
   <properties>
+    <jaxb2-basics-version>0.6.4</jaxb2-basics-version>
+    <maven-jaxb2-plugin-version>0.8.2</maven-jaxb2-plugin-version>
   </properties>
 
   <dependencies>
@@ -55,23 +57,88 @@
       <artifactId>slf4j-log4j12</artifactId>
       <scope>runtime</scope>
     </dependency>
-<dependency>
+  <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-camel</artifactId>
     </dependency>
-	
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-saxon</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-bindy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jaxb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-xstream</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-xmljson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xom</groupId>
+      <artifactId>xom</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <!-- maven-jaxb2-plugin generated methods (e.g. equals) depend on this -->
+    <dependency>
+      <groupId>org.jvnet.jaxb2_commons</groupId>
+      <artifactId>jaxb2-basics-runtime</artifactId>
+      <version>${jaxb2-basics-version}</version>
+    </dependency>
   </dependencies>
-
   <build>
     <defaultGoal>install</defaultGoal>
-
-    <plugins>
+     <plugins>
+      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <version>${maven-jaxb2-plugin-version}</version>
+        <executions>
+          <execution>
+            <id>generate</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <schemaDirectory>src/main/xsd</schemaDirectory>
+          <generatePackage>org.camelcookbook.transformation.myschema</generatePackage>
+          <extension>true</extension>
+          <args>
+            <arg>-XtoString</arg>
+            <arg>-Xequals</arg>
+            <arg>-XhashCode</arg>
+            <arg>-Xcopyable</arg>
+          </args>
+          <plugins>
+            <plugin>
+              <groupId>org.jvnet.jaxb2_commons</groupId>
+              <artifactId>jaxb2-basics</artifactId>
+              <version>${jaxb2-basics-version}</version>
+            </plugin>
+          </plugins>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-
 </project>
