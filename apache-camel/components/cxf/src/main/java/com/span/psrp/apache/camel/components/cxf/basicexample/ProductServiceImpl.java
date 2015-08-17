@@ -1,4 +1,4 @@
-package com.spn.psrp.apache.camel.components.cxf.basicexample;
+package com.span.psrp.apache.camel.components.cxf.basicexample;
 
 import java.util.HashMap;
 import java.util.Map;

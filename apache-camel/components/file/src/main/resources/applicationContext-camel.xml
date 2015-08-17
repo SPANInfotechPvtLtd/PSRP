@@ -7,8 +7,8 @@
 		http://camel.apache.org/schema/spring 
 		http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="processor" class="com.spn.psrp.apache.camel.components.file.spring.basicexample.LogProcessor"/>
-	<bean id="component" class="com.spn.psrp.apache.camel.components.file.spring.basicexample.Transormer"/>
+	<bean id="processor" class="com.span.psrp.apache.camel.components.file.spring.basicexample.LogProcessor"/>
+	<bean id="component" class="com.span.psrp.apache.camel.components.file.spring.basicexample.Transormer"/>
 
 	<camelContext  xmlns="http://camel.apache.org/schema/spring">
 		<route>

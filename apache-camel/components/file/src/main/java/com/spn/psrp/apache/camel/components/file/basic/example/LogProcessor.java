@@ -1,4 +1,4 @@
-package com.spn.psrp.apache.camel.components.file.basic.example;
+package com.span.psrp.apache.camel.components.file.basic.example;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;

@@ -1,4 +1,4 @@
-package com.spn.psrp.apache.camel.components.cxf.basicexample;
+package com.span.psrp.apache.camel.components.cxf.basicexample;
 
 public class ProductNotFoundException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
