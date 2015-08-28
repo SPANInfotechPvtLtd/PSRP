@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <import resource="embedded-jms-context.xml"/>
+
+  <bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
+    <property name="connectionFactory" ref="connectionFactory"/>
+  </bean>
+
+  <bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="connectionFactory" ref="connectionFactory"/>
+    <property name="transactionManager" ref="jmsTransactionManager"/>
+  </bean>
+
+  <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
+    <property name="transactionManager" ref="jmsTransactionManager"/>
+    <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+  </bean>
+
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+    <route>
+      <from uri="jms:inbound"/>
+      <transacted/>
+      <log message="Processing message: ${body}"/>
+      <to uri="jms:outbound"/>
+      <to uri="mock:out"/>
+    </route>
+  </camelContext>
+
+</beans>
