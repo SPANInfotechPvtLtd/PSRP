@@ -4,6 +4,9 @@ package com.span.psrp.apache.camel.topics.security.encryption;
 import java.security.Key;
 import java.security.KeyStore;
 
+import org.apache.camel.EndpointInject;
+import org.apache.camel.Produce;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -31,11 +34,18 @@ import org.slf4j.LoggerFactory;
  * Standard Algorithm Names Documentation : 
  * http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html 
  * Bouncy Castle Java Cryptography API: http://www.bouncycastle.org/java.html
+ * 
+ * how to make create shared.jceks please see README.md
  */
 
 public class EncryptionDecrptingMessageRouteBuilderTest extends CamelTestSupport {
     private final Logger log = LoggerFactory.getLogger(EncryptionDecrptingMessageRouteBuilderTest.class);
-
+    
+    @EndpointInject(uri="mock:decrypted")
+	private MockEndpoint mockDecrypted;
+	@Produce(uri="direct:encrypt")
+	private ProducerTemplate in;
+	
     /**
      * If using Java only, load the shared key using a java.security.Keystore instanceas follows:
      */
@@ -44,7 +54,7 @@ public class EncryptionDecrptingMessageRouteBuilderTest extends CamelTestSupport
         KeyStore keyStore = KeyStore.getInstance("JCEKS");
 
         ClassLoader classLoader = getClass().getClassLoader();
-        log.info("Loading keystore from [{}]", classLoader.getResource("shared.jceks").toString());
+        log.info("Loading keystore from [{}]", classLoader.getResource("").toString());
         keyStore.load(classLoader.getResourceAsStream("shared.jceks"), "sharedKeystorePassword".toCharArray());
 
         Key sharedKey = keyStore.getKey("shared", "sharedKeyPassword".toCharArray());
@@ -53,11 +63,11 @@ public class EncryptionDecrptingMessageRouteBuilderTest extends CamelTestSupport
 
     @Test
     public void testMessageEncryption() throws InterruptedException {
-        MockEndpoint mockDecrypted = getMockEndpoint("mock:decrypted");
+        mockDecrypted = getMockEndpoint("mock:decrypted");
         mockDecrypted.setExpectedMessageCount(1);
         mockDecrypted.message(0).body().isEqualTo("foo");
 
-        template.sendBody("direct:encrypt", "foo");
+        in.sendBody("direct:encrypt", "foo");
 
         assertMockEndpointsSatisfied();
     }

@@ -1,12 +1,13 @@
 package com.span.psrp.apache.camel.topics.security.encryptedproperties;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.jasypt.JasyptPropertiesParser;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.test.junit4.CamelTestSupport;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -24,22 +25,18 @@ import org.junit.Test;
  * Jasypt (Java Simplified Encryption):http://jasypt.org/ 
  * Standard Algorithm Names Documentation:
  * http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html
+ * 
+ * how to make create encrypt password please see README.md
  */
 
-public class EncryptedConfigurationPropertiesTest extends CamelTestSupport {
+public class EncryptedConfigurationPropertiesTest  {
 
-	@Override
-	public RouteBuilder createRouteBuilder() {
-		return new EncryptedConfigurationProperties();
-	}
-
-	/*
-	 * If using Java only, you need to instantiate the parser and
-	 * PropertiesComponent, and set the component on the Camel context before it
-	 * is started:
-	 */
-	@Override
-	public CamelContext createCamelContext() {
+	private CamelContext camelContext;
+	
+	@Before
+	public void setUpContext() throws Exception {
+		this.camelContext = new DefaultCamelContext();
+		
 		JasyptPropertiesParser propParser = new JasyptPropertiesParser();
 		propParser.setPassword("span");
 
@@ -47,19 +44,29 @@ public class EncryptedConfigurationPropertiesTest extends CamelTestSupport {
 		propComponent.setLocation("classpath:config.properties");
 		propComponent.setPropertiesParser(propParser);
 
-		CamelContext camelContext = new DefaultCamelContext();
 		camelContext.addComponent("properties", propComponent);
-		return camelContext;
+		
+		camelContext.addRoutes(new EncryptedConfigurationProperties());
+		camelContext.start();
 	}
+	
+	@After
+	public void cleanUpContext() throws Exception {
+		camelContext.stop();
+	}
+
 
 	@Test
 	public void testPropertiesLoaded() throws InterruptedException {
-		MockEndpoint mockOut = getMockEndpoint("mock:out");
+		
+		MockEndpoint mockOut = camelContext.getEndpoint("mock:out", MockEndpoint.class);
+		ProducerTemplate producerTemplate = camelContext.createProducerTemplate();
+		
 		mockOut.setExpectedMessageCount(1);
 		mockOut.message(0).header("userPassword").isEqualTo("span1234");
 
-		template.sendBody("direct:in", "direct:in");
+		producerTemplate.sendBody("direct:in", "direct:in");
 
-		assertMockEndpointsSatisfied();
+		mockOut.assertIsSatisfied();
 	}
 }

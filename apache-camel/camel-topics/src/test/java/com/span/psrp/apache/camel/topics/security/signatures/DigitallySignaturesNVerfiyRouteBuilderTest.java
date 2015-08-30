@@ -2,16 +2,13 @@
 package com.span.psrp.apache.camel.topics.security.signatures;
 
 import java.security.KeyStore;
-import java.security.SignatureException;
 
-import org.apache.camel.*;
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.crypto.DigitalSignatureConstants;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.SimpleRegistry;
 import org.apache.camel.test.junit4.CamelTestSupport;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +37,8 @@ import org.slf4j.LoggerFactory;
  * http://docs.oracle.com/javase/7/docs/technotes/tools/solaris/keytool.html
  * Standard Algorithm Names Documentation:
  * http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html
+ * 
+ * see in README.md file how to generate keystore.jks and truststore.jks
  */
 public class DigitallySignaturesNVerfiyRouteBuilderTest extends CamelTestSupport {
 
