@@ -16,6 +16,7 @@
     <property name="transactionManager" ref="jmsTransactionManager"/>
   </bean>
 
+
   <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
     <property name="transactionManager" ref="jmsTransactionManager"/>
     <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
