@@ -20,13 +20,33 @@
     <property name="transactionManager" ref="jmsTransactionManager"/>
     <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
   </bean>
+  
+  <bean id="myDeadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+  <property name="deadLetterUri" value="jms:dead"/>
+  <property name="redeliveryPolicy" ref="myRedeliveryPolicyConfig"/>
+</bean>
+
+<bean id="myRedeliveryPolicyConfig" class="org.apache.camel.processor.RedeliveryPolicy">
+  <property name="maximumRedeliveries" value="3"/>
+  <property name="redeliveryDelay" value="5000"/>
+</bean>
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
-    <route>
+    <route  errorHandlerRef="myDeadLetterErrorHandler">
       <from uri="jms:inbound"/>
       <transacted/>
       <log message="Processing message: ${body}"/>
-      <to uri="jms:outbound"/>
+      <choice>
+        <when>
+           <simple>${body} contains 'ping'</simple>
+          <log message="Message cannot be processed further - rolling back insert"/>
+          <rollback message="Message contained word 'rollback'"/>
+        </when>
+        <otherwise>
+          <log message="Message processed successfully"/>
+        </otherwise>
+      </choice>
+       <to uri="jms:outbound"/>
       <to uri="mock:out"/>
     </route>
   </camelContext>
