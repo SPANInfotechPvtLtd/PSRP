@@ -102,6 +102,12 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-xmljson</artifactId>
+			<exclusions>
+				<exclusion>
+    				 <groupId>commons-beanutils</groupId>
+    				 <artifactId>commons-beanutils</artifactId>
+    		    </exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>xom</groupId>
@@ -133,11 +139,11 @@
 
 		<!-- the following 2 dependencies are required for XPath 2.0, used by the 
 			xmlsecurity tests -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>net.sf.saxon</groupId>
 			<artifactId>Saxon-HE</artifactId>
 			<version>9.5.0.2</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
@@ -166,6 +172,10 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -182,6 +192,7 @@
 			<artifactId>camel-test-spring</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 
 
 	</dependencies>
