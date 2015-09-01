@@ -16,7 +16,6 @@ public class AuditLogHelper {
     public Map<String, Object> generateNewTopic(Exchange ex){
     	System.out.print("enterd new Topic"+"generateNewTopic"+"\n");
     	AuditLog audit=ex.getIn().getBody(AuditLog.class);
-    	System.out.print("enterd new Topic"+"generateNewTopic"+"\n");
         Map<String, Object> answer = new HashMap<String, Object>();
          answer.put("auditid", new Integer(ran.nextInt()));
         answer.put("auditUser", audit.getMessage());
