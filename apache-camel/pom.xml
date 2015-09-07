@@ -45,10 +45,10 @@
   </properties>
 
    <modules>
-    
-	<module>camel-core</module>
-	<module>components-eip-transactions</module>
-    </modules>
+     <module>camel-core</module>
+	<module>camel-security</module>
+	<module>components-eip-usecase</module>
+ </modules>
 
 
   <dependencyManagement>
