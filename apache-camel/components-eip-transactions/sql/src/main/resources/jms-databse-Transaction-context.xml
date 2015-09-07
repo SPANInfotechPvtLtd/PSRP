@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <import resource="embedded-jms-context.xml"/>
+  <import resource="embedded-db-context.xml"/>
+  
+  <bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
+    <property name="connectionFactory" ref="connectionFactory"/>
+  </bean> 
+
+  <bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="connectionFactory" ref="connectionFactory"/>
+    <!-- <property name="transactionManager" ref="jmsTransactionManager"/> -->
+  </bean>
+  
+    <bean id="sql" class="org.apache.camel.component.sql.SqlComponent">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+  <!-- this is an implementation of PlatformTransactionManager, Camel will look it up when a route is marked as transacted -->
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+  <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
+    <property name="transactionManager" ref="transactionManager"/>
+    <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+  </bean>
+
+  <bean id="illegalArgumentException" class="java.lang.IllegalArgumentException">
+    <constructor-arg value="Exchange caused explosion"/>
+  </bean>
+
+<bean id="rollBackPredicate" class="com.span.psrp.apache.camel.topics.transaction.rollback.RollBackPredicate" />
+
+<bean id="auditLogHelper" class="com.span.psrp.apache.camel.topics.transaction.basic.AuditLogHelper" />
+
+
+ <!--  <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
+    <property name="transactionManager" ref="jmsTransactionManager"/>
+    <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+  </bean> -->
+  
+  <bean id="myDeadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+  <property name="deadLetterUri" value="jms:dead"/>
+  <property name="redeliveryPolicy" ref="myRedeliveryPolicyConfig"/>
+</bean>
+
+<bean id="myRedeliveryPolicyConfig" class="org.apache.camel.processor.RedeliveryPolicy">
+  <property name="maximumRedeliveries" value="3"/>
+  <property name="redeliveryDelay" value="5000"/>
+</bean>
+
+  <camelContext xmlns="http://camel.apache.org/schema/spring" >
+    <route  errorHandlerRef="myDeadLetterErrorHandler">
+      <from uri="direct:transacted"/>
+     <aggregate strategyRef="myStrategy" >
+        <!-- aggregate all messages into the same group -->
+       <!--  <correlationExpression>
+          <constant>true</constant>
+        </correlationExpression> -->
+        <!-- if end user enters STOP then complete the aggregation -->
+       <!--  <completionPredicate>
+          <simple>${body} contains 'STOP'</simple>
+        </completionPredicate> -->
+        <!-- and transform the completed message to a human readable -->
+        <!-- <transform>
+          <simple>The result is: ${body}</simple>
+        </transform> -->
+        <!-- which is printed on the console -->
+        <!-- <to uri="stream:out"/> -->
+      </aggregate>
+      <transacted/>
+      <!-- transacted requires a PlatformTransactionManager and a  ref="PROPAGATION_REQUIRED" -->
+      <log message="Processing message: ${body}"/>
+     
+      <transform>
+				<method ref="auditLogHelper" method="generateNewTopic" />
+      </transform>
+      <choice>
+        <when>
+           <simple>${bean:rollBackPredicate}</simple>
+          <log message="Message cannot be processed further - rolling back insert"/>
+          <rollback message="Message contained word 'rollback'"/>
+        </when>
+        <otherwise>
+          <log message="Message processed successfully"/>
+        </otherwise>
+      </choice>
+      <to uri="sql:insert into audit_log (audit_id,message) values (:#auditid,:#auditUser)"/>
+      <choice>
+        <when>
+           <simple>${bean:rollBackPredicate}</simple>
+          <log message="Message cannot be processed further - rolling back insert"/>
+          <rollback message="Message contained word 'rollback'"/>
+        </when>
+        <otherwise>
+          <log message="Message processed successfully"/>
+        </otherwise>
+      </choice>
+      <to uri="jms:outbound"/>
+      <to uri="mock:out"/>
+    </route>
+  </camelContext>
+
+
+</beans>

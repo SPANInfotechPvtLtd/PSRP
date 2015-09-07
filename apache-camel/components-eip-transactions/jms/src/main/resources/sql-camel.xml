@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://camel.apache.org/schema/spring  http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@10.10.207.165:1521:ORCL" />
+		<property name="username" value="core_ws" />
+		<property name="password" value="core_ws" />
+	</bean> 
+
+
+	<!-- configure the Camel SQL component to use the JDBC data source -->
+	<bean id="sqlComponent" class="org.apache.camel.component.sql.SqlComponent">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="topicBean" class="com.span.psrp.apache.camel.topics.sql.NewTopicBean" />
+
+	<!-- here is Camel configured with a number of routes -->
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+
+		<!-- use Camel property placeholder loaded from the given file -->
+		<propertyPlaceholder id="placeholder" location="classpath:sql.properties" />
+
+		<!-- route that generate new orders and insert them in the database -->
+		<route id="generateOrder-route">
+			<from uri="timer:foo?period=5s" />
+			<transform>
+				<method ref="topicBean" method="generateNewTopic" />
+			</transform>
+			<to uri="sqlComponent:INSERT INTO newtopic(TopicId,TopicName, url,ModuleId,CreateDate) VALUES (:#TopicId,:#TopicName, :#url, :#ModuleId,:#CreateDate)" />
+			<log message="Inserted new NewTopic ${body[TopicId]}" />
+		</route>
+
+		<!--
+			route that process the NewTopics by picking up new rows from the
+			database and when done processing then update the row to mark it as
+			processed
+		-->
+		<route id="processNewTopic-route">
+			<from uri="sqlComponent:select * from newtopic?
+						consumer.onConsume=update newtopic set TopicName = 'Apache Camel jagan' where TopicId = :#TopicId" />
+			<to uri="bean:topicBean?method=processNewTopic" />
+			<log message="${body}" />
+			<log message="Updated new NewTopic "/>
+		</route>
+ 
+	</camelContext>
+</beans>
