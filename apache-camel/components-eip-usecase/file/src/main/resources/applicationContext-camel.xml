@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:camel="http://camel.apache.org/schema/spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd          
+		http://camel.apache.org/schema/spring 
+		http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<bean id="processor" class="com.span.psrp.apache.camel.components.file.spring.basicexample.LogProcessor"/>
+	<bean id="component" class="com.span.psrp.apache.camel.components.file.spring.basicexample.Transormer"/>
+
+	<camelContext  xmlns="http://camel.apache.org/schema/spring">
+		<route>
+			<from uri="file:D:/camel/input?noop=true" />
+			<process ref="processor"/>		
+			<bean ref="component"/>
+			<to uri="file:D:/camel/output" />		
+		</route>
+	</camelContext>
+</beans>

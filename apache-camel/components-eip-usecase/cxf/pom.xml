@@ -3,7 +3,7 @@
   <groupId>com.span.psrp.apache.camel.components.cxf</groupId>
   <artifactId>cxf</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>${application-name} :: camel-cxf</name>
+  <name>${application-name} :: component-cxf</name>
   <dependencies>
 		 <dependency>
 			<groupId>org.apache.camel</groupId>
