@@ -47,7 +47,9 @@
    <modules>
      <module>camel-core</module>
 	<module>camel-security</module>
+	<module>camel-eip</module>
 	<module>components-eip-usecase</module>
+	
  </modules>
 
 
