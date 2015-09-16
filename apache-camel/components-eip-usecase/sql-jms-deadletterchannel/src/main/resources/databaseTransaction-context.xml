@@ -30,7 +30,7 @@
   <bean id="auditLogHelper" class="com.span.psrp.apache.camel.topics.transaction.basic.AuditLogHelper" />
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
-    <route>
+    <!-- <route>
       <from uri="direct:nonTransacted"/>
       <log message="Processing message: ${body}"/>
       <setHeader headerName="message">
@@ -46,17 +46,17 @@
     <route>
       <from uri="direct:transacted"/>
       <transacted/>
-      <!-- transacted requires a PlatformTransactionManager and a  ref="PROPAGATION_REQUIRED" -->
+      transacted requires a PlatformTransactionManager and a  ref="PROPAGATION_REQUIRED"
       <log message="Processing message: ${body}"/>
-      <!-- <setHeader headerName="message">
+      <setHeader headerName="message">
         <simple>${body}</simple>
-      </setHeader> -->
+      </setHeader>
       <transform>
 				<method ref="auditLogHelper" method="generateNewTopic1" />
       </transform>
       <to uri="sql:insert into audit_log (audit_id,message) values (:#auditd,:#auditUser)"/>
       <to uri="mock:out"/>
-    </route>
+    </route> -->
   </camelContext>
 
 </beans>
