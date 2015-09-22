@@ -9,7 +9,7 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>apache-camel-components-sql-jms</artifactId>
+	<artifactId>sql-jms-deadletterchannel</artifactId>
 	<packaging>jar</packaging>
 
 	<name>${application-name} :: components-sql-jms</name>

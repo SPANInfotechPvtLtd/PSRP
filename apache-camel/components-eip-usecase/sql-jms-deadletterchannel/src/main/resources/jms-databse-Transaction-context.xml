@@ -35,9 +35,9 @@
     <constructor-arg value="Exchange caused explosion"/>
   </bean>
 
-<bean id="rollBackPredicate" class="com.span.psrp.apache.camel.topics.transaction.rollback.RollBackPredicate" />
+<bean id="rollBackPredicate" class="com.span.psrp.apache.camel.helper.RollBackPredicate" />
 
-<bean id="auditLogHelper" class="com.span.psrp.apache.camel.topics.transaction.basic.AuditLogHelper" />
+<bean id="auditLogHelper" class="com.span.psrp.apache.camel.helper.AuditLogHelper" />
 
 
  <!--  <bean id="PROPAGATION_REQUIRED" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
@@ -58,22 +58,7 @@
   <camelContext xmlns="http://camel.apache.org/schema/spring" >
     <route  errorHandlerRef="myDeadLetterErrorHandler">
       <from uri="direct:transacted"/>
-     <aggregate strategyRef="myStrategy" >
-        <!-- aggregate all messages into the same group -->
-       <!--  <correlationExpression>
-          <constant>true</constant>
-        </correlationExpression> -->
-        <!-- if end user enters STOP then complete the aggregation -->
-       <!--  <completionPredicate>
-          <simple>${body} contains 'STOP'</simple>
-        </completionPredicate> -->
-        <!-- and transform the completed message to a human readable -->
-        <!-- <transform>
-          <simple>The result is: ${body}</simple>
-        </transform> -->
-        <!-- which is printed on the console -->
-        <!-- <to uri="stream:out"/> -->
-      </aggregate>
+     
       <transacted/>
       <!-- transacted requires a PlatformTransactionManager and a  ref="PROPAGATION_REQUIRED" -->
       <log message="Processing message: ${body}"/>

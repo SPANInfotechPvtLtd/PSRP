@@ -15,12 +15,12 @@
 	</bean> 
 
   <!-- utility object to check the audit_log table -->
-  <bean id="auditLogDao" class="com.span.psrp.apache.camel.topics.transaction.basic.AuditLogDao">
+  <bean id="auditLogDao" class="com.span.psrp.apache.camel.helper.AuditLogDao">
     <constructor-arg ref="dataSource"/>
   </bean>
   
   <!-- utility object to check the messages table -->
-  <bean id="messageDao" class="com.span.psrp.apache.camel.topics.transaction.basic.MessageDao">
+  <bean id="messageDao" class="com.span.psrp.apache.camel.helper.MessageDao">
     <constructor-arg ref="dataSource"/>
   </bean>
 </beans>
