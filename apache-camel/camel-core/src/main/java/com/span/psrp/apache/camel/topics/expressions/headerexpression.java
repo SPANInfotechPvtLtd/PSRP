@@ -1,4 +1,4 @@
-package com.sample.camel;
+package com.span.psrp.apache.camel.topics.expressions; 
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;

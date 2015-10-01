@@ -1,4 +1,4 @@
-package com.sample.camel;
+package com.span.psrp.apache.camel.topics.expressions;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
