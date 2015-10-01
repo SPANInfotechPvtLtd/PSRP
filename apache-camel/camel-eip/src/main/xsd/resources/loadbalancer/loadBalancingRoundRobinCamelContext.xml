@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="timer:myTimer?period=1s" />
+            <loadBalance>
+                <roundRobin />
+                <to uri="direct:a" />
+                <to uri="direct:b" />
+                <to uri="direct:c" />
+            </loadBalance>
+        </route>
+
+        <route>
+            <from uri="direct:a" />
+            <setBody>
+                <constant>Endpoint Direct a</constant>
+            </setBody>
+            <to uri="stream:out" />
+        </route>
+
+        <route>
+            <from uri="direct:b" />
+            <setBody>
+                <constant>Endpoint Direct b</constant>
+            </setBody>
+            <to uri="stream:out" />
+        </route>
+
+        <route>
+            <from uri="direct:c" />
+            <setBody>
+                <constant>Endpoint Direct c</constant>
+            </setBody>
+            <to uri="stream:out" />
+        </route>
+    </camelContext>
+</beans>
