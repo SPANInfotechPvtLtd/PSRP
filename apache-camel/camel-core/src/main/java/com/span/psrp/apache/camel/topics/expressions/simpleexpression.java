@@ -1,9 +1,7 @@
 package com.span.psrp.apache.camel.topics.expressions;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 
  
