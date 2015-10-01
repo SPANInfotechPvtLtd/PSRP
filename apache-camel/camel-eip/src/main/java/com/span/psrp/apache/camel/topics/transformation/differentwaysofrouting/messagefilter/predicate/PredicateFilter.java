@@ -1,4 +1,4 @@
-package com.sample.camel;
+package com.span.psrp.apache.camel.topics.transformation.differentwaysofrouting.predicate;
 
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;

@@ -1,5 +1,4 @@
-package camelinaction;
-
+package com.span.psrp.apache.camel.topics.transformation.differentwaysofrouting.dynamicrouter;
 import org.apache.camel.Exchange;
 import org.apache.camel.Header;
 
