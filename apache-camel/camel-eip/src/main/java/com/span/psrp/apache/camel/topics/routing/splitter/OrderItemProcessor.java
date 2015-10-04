@@ -5,6 +5,7 @@ package com.span.psrp.apache.camel.topics.routing.splitter;
  */
 public class OrderItemProcessor {
     public void process(OrderItem item) {
-        item.process();
+    	item.process();
+        System.out.print(item+"\n");
     }
 }

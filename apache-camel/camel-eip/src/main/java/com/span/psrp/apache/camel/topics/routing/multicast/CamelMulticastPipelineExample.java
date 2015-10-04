@@ -20,27 +20,26 @@ public class CamelMulticastPipelineExample {
                 public void configure() {
                     from("direct:start")
                             .multicast()
-                            
                             .pipeline()
                             .to("bean:myBean?method=addFirst")
                             .to("bean:stringUtils?method=upperCase")
-                            .to("stream:out")
+                            .to("mock:out")
                             .end()
 
                             .pipeline()
                             .to("bean:myBean?method=addSecond")
                             .to("bean:stringUtils?method=upperCase")
-                            .to("stream:out")
+                            .to("mock:out")
                             .end()
 
                             .pipeline()
                             .to("bean:myBean?method=addThird")
                             .to("bean:stringUtils?method=upperCase")
-                            .to("stream:out")
+                            .to("mock:out")
                             .end()
                             .end()
                             .setBody(simple("Final Output: ${body}"))
-                            .to("stream:out");
+                            .to("mock:out");
                 }
             });
             ProducerTemplate template = camelContext.createProducerTemplate();

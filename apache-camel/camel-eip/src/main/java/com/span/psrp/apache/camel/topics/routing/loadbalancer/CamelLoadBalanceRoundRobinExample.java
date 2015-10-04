@@ -1,6 +1,8 @@
 package com.span.psrp.apache.camel.topics.routing.loadbalancer;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 
@@ -21,20 +23,37 @@ public class CamelLoadBalanceRoundRobinExample {
                             .to("direct:c");
 
                     from("direct:a")
-                            .setBody()
-                            .constant("Endpoint Direct a")
-                            .to("stream:out");
+                    .setBody()
+                    .constant("Endpoint Direct a").process(new Processor() {
+						@Override
+						public void process(Exchange exchange) throws Exception {
+							System.out.print(exchange.getIn().getBody()+"\n");
+							
+						}
+					})
+                    .to("mock:out");
 
-                    from("direct:b")
-                            .setBody()
-                            .constant("Endpoint Direct b")
-                            .to("stream:out");
+            from("direct:b")
+                    .setBody()
+                    .constant("Endpoint Direct b").process(new Processor() {
+						@Override
+						public void process(Exchange exchange) throws Exception {
+							System.out.print(exchange.getIn().getBody()+"\n");									
+						}
+					})
+                    .to("mock:out");
 
-                    from("direct:c")
-                            .setBody()
-                            .constant("Endpoint Direct c")
-                            .to("stream:out");
-                }
+            from("direct:c")
+                    .setBody()
+                    .constant("Endpoint Direct c").process(new Processor() {
+						@Override
+						public void process(Exchange exchange) throws Exception {
+							System.out.print(exchange.getIn().getBody()+"\n");	
+							
+						}
+					})
+                    .to("mock:out");
+        }
             });
             camelContext.start();
             Thread.sleep(10000);

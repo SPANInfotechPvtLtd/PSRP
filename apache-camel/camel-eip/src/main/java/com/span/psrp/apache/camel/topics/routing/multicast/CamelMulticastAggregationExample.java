@@ -22,7 +22,7 @@ public class CamelMulticastAggregationExample {
                             .aggregationStrategy(new JoinReplyAggregationStrategy())
                             .to("direct:a", "direct:b", "direct:c")
                             .end()
-                            .to("stream:out");
+                            .to("mock:out");
 
                     from("direct:a")
                             .to("bean:myBean?method=addFirst");

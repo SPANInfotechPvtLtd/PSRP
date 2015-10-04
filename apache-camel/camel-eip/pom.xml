@@ -197,11 +197,11 @@
         <artifactId>camel-jdbc</artifactId>
         <version>2.13.0</version>
        </dependency>
-       <dependency>
+       <!--<dependency>
         <groupId>com.oracle</groupId>
         <artifactId>ojdbc6</artifactId>
          <version>11.2.0.3.0</version>
-        </dependency>
+        </dependency>-->
       <dependency>
        <groupId>org.apache.camel</groupId>
        <artifactId>camel-sql</artifactId>
@@ -212,11 +212,11 @@
 	<artifactId>commons-dbcp2</artifactId>
 	<version>2.1.1</version>
     </dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>se.lf.service</groupId>
 			<artifactId>business.common.qs</artifactId>
 			<version>1.0.0</version>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 	<build>
 		<defaultGoal>install</defaultGoal>

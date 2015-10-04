@@ -20,7 +20,7 @@ public class CamelSplitterStopOnExceptionExample {
                 public void configure() {
                     onException(Exception.class)
                             .handled(true)
-                            .to("log:onException")
+                            .to("direct:onException")
                             .log("Exception thrown. Stop routing..");
 
                     from("timer://generateOrders456?fixedRate=true&period=10000")

@@ -13,5 +13,6 @@ public class MyProcessor implements Processor {
        Order order = new Order(2);
        order.addItem("Bread", 10, Integer.parseInt("abc"));
        exchange.getIn().setBody(order);
+        
     }
 }

@@ -24,22 +24,22 @@ public class CamelMulticastExample {
                     from("direct:a")
                             .to("bean:myBean?method=addFirst")
                             .setBody(simple("body: ${body}, thread: ${threadName}"))
-                            .to("stream:out");
+                            .to("mock:out");
 
                     from("direct:b")
                             .to("bean:myBean?method=addSecond")
                             .setBody(simple("body: ${body}, thread: ${threadName}"))
-                            .to("stream:out");
+                            .to("mock:out");
 
                     from("direct:c")
                             .to("bean:myBean?method=addThird")
                             .setBody(simple("body: ${body}, thread: ${threadName}"))
-                            .to("stream:out");
+                            .to("mock:out");
                 }
             });
             ProducerTemplate template = camelContext.createProducerTemplate();
             camelContext.start();
-            template.sendBody("direct:start", "Multicast");
+            template.sendBody("direct:start", "Multicast,Jagan");
         } finally {
             camelContext.stop();
         }

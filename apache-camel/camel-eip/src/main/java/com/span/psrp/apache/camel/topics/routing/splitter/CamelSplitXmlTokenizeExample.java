@@ -1,6 +1,8 @@
 package com.span.psrp.apache.camel.topics.routing.splitter;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -19,14 +21,19 @@ public class CamelSplitXmlTokenizeExample {
                 public void configure() {
                     from("direct:author")
                             .log("Find all the authors")
-                            .split().tokenizeXML("author")
+                            .split().tokenizeXML("tags").process(new Processor() {
+								@Override
+								public void process(Exchange exchange) throws Exception {
+									System.out.println("******"+exchange.getIn().getBody());
+								}
+							})
                             .log("${body} split size: ${header.CamelSplitSize}")
                             .end();
                 }
             });
             ProducerTemplate template = camelContext.createProducerTemplate();
             camelContext.start();
-            String filename = "target/classes/articles.xml";
+            String filename = "src/main/xsd/resources/articles.xml";
             InputStream articleStream = new FileInputStream(filename);
             template.sendBody("direct:author", articleStream);
         } finally {

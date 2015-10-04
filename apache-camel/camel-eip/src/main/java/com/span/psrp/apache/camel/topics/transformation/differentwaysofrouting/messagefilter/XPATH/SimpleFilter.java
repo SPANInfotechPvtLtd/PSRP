@@ -1,4 +1,4 @@
-package com.span.psrp.apache.camel.topics.transformation.differentwaysofrouting.messagefilter.xpath;
+package com.span.psrp.apache.camel.topics.transformation.differentwaysofrouting.messagefilter.XPATH;
 
 
 import org.apache.camel.CamelContext;
