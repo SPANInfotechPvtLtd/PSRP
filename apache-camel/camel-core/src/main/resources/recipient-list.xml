@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       ">
+	<bean id="empRouter"
+		class="com.span.psrp.apache.camel.topics.recipientlist.EmployeeRouter" />
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+		<route>
+			<from uri="direct:start" />
+			<setHeader headerName="departments">
+				<method ref="empRouter" method="routeEmployee" />
+			</setHeader>
+			<recipientList ignoreInvalidEndpoints="true">
+				<header>departments</header>
+			</recipientList>
+		</route>
+
+		<route>
+			<from uri="direct:account" />
+			<log message="Account department notified '${body}" />
+		</route>
+
+		<route>
+			<from uri="direct:hr" />
+			<log message="HR department notified '${body}" />
+		</route>
+
+		<route>
+			<from uri="direct:manager" />
+			<log message="Manager notified '${body}" />
+		</route>
+
+	</camelContext>
+
+</beans>
