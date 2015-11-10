@@ -29,6 +29,32 @@
 			<artifactId>camel-spring</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jpa</artifactId>
+			<version>2.16.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>1.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>4.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>3.2.3.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>LATEST</version>
+		</dependency>
+		
 		<!-- testing dependencies -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -228,7 +254,7 @@
 			<properties>
 				<username>core_ws</username>
 				<password>core_ws</password>
-				<url>jdbc:oracle:thin:@00.00.000.000:1521:ORCL</url>
+				<url>jdbc:oracle:thin:@10.10.207.165:1521:ORCL</url>
 			</properties>
 		</profile>
 		<profile>
