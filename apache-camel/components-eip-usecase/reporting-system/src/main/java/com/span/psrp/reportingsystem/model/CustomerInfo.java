@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
 @Entity(name="CUSTOMER_INFO")
-@NamedQuery(name = "selectQuery", query = "")
+@NamedQuery(name = "selectQuery", query = "select cus from CUSTOMER_INFO cus where cus.customerNo = '290185382643'")
 public class CustomerInfo implements Serializable{
 
 	private static final long serialVersionUID = 1788731994385494018L;

@@ -17,12 +17,11 @@ public class ReportingSystemMain {
     	CamelContext camelContext = SpringCamelContext.springCamelContext(appContext, false);
     	template = camelContext.createProducerTemplate();
 		System.out.println("Start camel context");
-	    template.sendBody("direct:transacted", "");
-	    consumerTemplate=camelContext.createConsumerTemplate();
-	    String consumerTemplateResponse= consumerTemplate.receiveBody("direct:transacted", String.class);
+	    //template.sendBody("direct:start","290185382643");
+	   // consumerTemplate=camelContext.createConsumerTemplate();
     	appContext.start();
     	try {
-			Thread.sleep(2000);
+			Thread.sleep(1500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
