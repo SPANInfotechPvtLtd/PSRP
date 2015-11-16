@@ -49,12 +49,7 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>3.2.3.RELEASE</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-			<version>LATEST</version>
-		</dependency>
-		
+
 		<!-- testing dependencies -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -224,6 +219,11 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
