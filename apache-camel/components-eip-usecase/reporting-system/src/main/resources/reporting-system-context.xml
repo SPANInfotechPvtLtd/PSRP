@@ -1,55 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
-
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+           
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="persistenceUnit" />
 	</bean>
-	<bean id="entityManagerFactoryMySql"
-		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+	
+	<bean id="entityManagerFactoryMySql" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="mysqlpersistenceUnit" />
 	</bean>
 
 	<bean id="oraclejpa" class="org.apache.camel.component.jpa.JpaComponent">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
+	
 	<bean id="mysqljpa" class="org.apache.camel.component.jpa.JpaComponent">
 		<property name="entityManagerFactory" ref="entityManagerFactoryMySql" />
 	</bean>
 	
-	<bean id="pdfBuilder" class="com.span.psrp.reportingsystem.pdf.PdfRouteBuilder"/>
+	<bean id="queryParam" class="com.span.psrp.reportingsystem.QueryParam" />	
+	
+	<util:map id="readAcctInfoBasedOnCustomerId">
+		<entry key="customerId" value="#{queryParam.CUSTOMER_ID}" />
+	</util:map>
 
-	<bean id="aggregateStrategy"
-		class="com.span.psrp.reportingsystem.aggregator.ReportingsystemAggregator" />
+	<util:map id="readCustInfoBasedOncustomerno">
+		<entry key="customerno" value="#{queryParam.CUSTOMER_NO}"/>
+	</util:map>
+	
+	<bean id="aggregateStrategy" class="com.span.psrp.reportingsystem.aggregator.ReportingsystemAggregator" />
 
-	<!-- <bean id="jpatransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"> 
-		<property name="entityManagerFactory" ref="entityManagerFactory" /> </bean> -->
-
-	<!-- <bean id="sql" class="org.apache.camel.component.sql.SqlComponent"> 
-		<property name="dataSource" ref="dataSource" /> </bean> -->
-
-	<!-- this is an implementation of PlatformTransactionManager, Camel will 
-		look it up when a route is marked as transacted -->
+	<bean id="pdfBuilder" class="com.span.psrp.reportingsystem.pdf.PdfRouteBuilder" />
 
 	<camelContext xmlns="http://camel.apache.org/schema/spring"
 		streamCache="true" trace="true" autoStartup="true">
 		<route>
 			<from
-				uri="oraclejpa://com.span.psrp.reportingsystem.model.CustomerInfo?consumer.namedQuery=selectQuery&amp;consumeDelete=false&amp;maximumResults=5&amp;consumer.delay=500&amp;consumeLockEntity=true" />
-			<to uri="direct:sampletest"></to>
+				uri="oraclejpa://com.span.psrp.reportingsystem.model.CustomerInfo?consumer.namedQuery=customerRead&amp;consumer.parameters=#readCustInfoBasedOncustomerno&amp;consumeDelete=false&amp;maximumResults=5&amp;consumer.delay=500&amp;consumeLockEntity=true" />
+			<to uri="direct:aggregate"></to>
 		</route>
 		<route>
 			<from
-				uri="mysqljpa://com.span.psrp.reportingsystem.model.AccountInfo?consumer.namedQuery=accountRead&amp;consumeDelete=false&amp;maximumResults=5&amp;consumer.delay=500&amp;consumeLockEntity=true" />
-			<to uri="direct:sampletest"></to>
+				uri="mysqljpa://com.span.psrp.reportingsystem.model.AccountInfo?consumer.namedQuery=accountRead&amp;consumer.parameters=#readAcctInfoBasedOnCustomerId&amp;consumeDelete=false&amp;maximumResults=5&amp;consumer.delay=500&amp;consumeLockEntity=true" />
+			<to uri="direct:aggregate"></to>
 		</route>
 		<route>
-			<from uri="direct:sampletest" />
-			<aggregate strategyRef="aggregateStrategy"
-				completionInterval="500" completionSize="20">
+			<from uri="direct:aggregate" />
+			<aggregate strategyRef="aggregateStrategy" completionSize="2">
 				<correlationExpression>
 					<constant>true</constant>
 				</correlationExpression>
@@ -59,13 +57,12 @@
 		<route>
 			<from uri="direct:pdfgenerator" />
 			<bean ref="pdfBuilder" method="processPdf" />
-			<to uri="direct:filecopy"/>
+			<to uri="direct:filecopy" />
 		</route>
-		
 		<route>
 			<from uri="direct:filecopy" />
-			<to uri="file:target/report-sample?noop=true"/>
-			<to uri="file:C:/Users/mohanarao_sv/Desktop/report-system"/>
+			<to uri="file:target/report-sample?noop=true" />
+			<to uri="file:C:/Users/jaganmohan_p/Desktop/report-system" />
 		</route>
 	</camelContext>
 </beans>

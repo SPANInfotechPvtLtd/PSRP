@@ -13,7 +13,6 @@ public class ReportingsystemAggregator implements AggregationStrategy {
 
     @Override
     public Exchange aggregate(final Exchange oldExchange, final Exchange newExchange) {
-
         if ((null != oldExchange) && (null != newExchange)) {
             if ((oldExchange != null) || (oldExchange.getIn() != null)) {
                 CustomerInfo customerInfo = oldExchange.getIn().getBody(CustomerInfo.class);

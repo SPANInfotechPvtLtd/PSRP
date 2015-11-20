@@ -1,4 +1,4 @@
-package com.span.psrp.reportingsystem;
+package com.span.psrp.reportingsystem.main;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ConsumerTemplate;
@@ -17,8 +17,6 @@ public class ReportingSystemMain {
         CamelContext camelContext = SpringCamelContext.springCamelContext(appContext, false);
         template = camelContext.createProducerTemplate();
         System.out.println("Start camel context");
-        // template.sendBody("direct:start","290185382643");
-        // consumerTemplate=camelContext.createConsumerTemplate();
         appContext.start();
         try {
             Thread.sleep(2000);
