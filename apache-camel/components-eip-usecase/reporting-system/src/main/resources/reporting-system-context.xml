@@ -4,10 +4,12 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="persistenceUnit" />
 	</bean>
-	<bean id="entityManagerFactoryMySql" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+	<bean id="entityManagerFactoryMySql"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="mysqlpersistenceUnit" />
 	</bean>
 
@@ -17,17 +19,17 @@
 	<bean id="mysqljpa" class="org.apache.camel.component.jpa.JpaComponent">
 		<property name="entityManagerFactory" ref="entityManagerFactoryMySql" />
 	</bean>
+	
+	<bean id="pdfBuilder" class="com.span.psrp.reportingsystem.pdf.PdfRouteBuilder"/>
 
 	<bean id="aggregateStrategy"
 		class="com.span.psrp.reportingsystem.aggregator.ReportingsystemAggregator" />
 
-	<!-- <bean id="jpatransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean> -->
-	
-	<!-- <bean id="sql" class="org.apache.camel.component.sql.SqlComponent">
-		<property name="dataSource" ref="dataSource" />
-	</bean> -->
+	<!-- <bean id="jpatransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"> 
+		<property name="entityManagerFactory" ref="entityManagerFactory" /> </bean> -->
+
+	<!-- <bean id="sql" class="org.apache.camel.component.sql.SqlComponent"> 
+		<property name="dataSource" ref="dataSource" /> </bean> -->
 
 	<!-- this is an implementation of PlatformTransactionManager, Camel will 
 		look it up when a route is marked as transacted -->
@@ -35,7 +37,8 @@
 	<camelContext xmlns="http://camel.apache.org/schema/spring"
 		streamCache="true" trace="true" autoStartup="true">
 		<route>
-			<from uri="oraclejpa://com.span.psrp.reportingsystem.model.CustomerInfo?consumer.namedQuery=selectQuery&amp;consumeDelete=false&amp;maximumResults=5&amp;consumer.delay=500&amp;consumeLockEntity=true" />
+			<from
+				uri="oraclejpa://com.span.psrp.reportingsystem.model.CustomerInfo?consumer.namedQuery=selectQuery&amp;consumeDelete=false&amp;maximumResults=5&amp;consumer.delay=500&amp;consumeLockEntity=true" />
 			<to uri="direct:sampletest"></to>
 		</route>
 		<route>
@@ -54,8 +57,15 @@
 			</aggregate>
 		</route>
 		<route>
-			<from uri="direct:pdfgenerator " />
-			<to uri="mock:end"></to>
+			<from uri="direct:pdfgenerator" />
+			<bean ref="pdfBuilder" method="processPdf" />
+			<to uri="direct:filecopy"/>
+		</route>
+		
+		<route>
+			<from uri="direct:filecopy" />
+			<to uri="file:target/report-sample?noop=true"/>
+			<to uri="file:C:/Users/mohanarao_sv/Desktop/report-system"/>
 		</route>
 	</camelContext>
 </beans>
