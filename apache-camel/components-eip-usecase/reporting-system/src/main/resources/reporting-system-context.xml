@@ -2,34 +2,37 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
-           
-	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="persistenceUnit" />
 	</bean>
-	
-	<bean id="entityManagerFactoryMySql" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+
+	<bean id="entityManagerFactoryMySql"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="mysqlpersistenceUnit" />
 	</bean>
 
 	<bean id="oraclejpa" class="org.apache.camel.component.jpa.JpaComponent">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	
+
 	<bean id="mysqljpa" class="org.apache.camel.component.jpa.JpaComponent">
 		<property name="entityManagerFactory" ref="entityManagerFactoryMySql" />
 	</bean>
-	
-	<bean id="queryParam" class="com.span.psrp.reportingsystem.QueryParam" />	
-	
+
+	<bean id="queryParam" class="com.span.psrp.reportingsystem.QueryParam" />
+
 	<util:map id="readAcctInfoBasedOnCustomerId">
 		<entry key="customerId" value="#{queryParam.CUSTOMER_ID}" />
 	</util:map>
 
 	<util:map id="readCustInfoBasedOncustomerno">
-		<entry key="customerno" value="#{queryParam.CUSTOMER_NO}"/>
+		<entry key="customerno" value="#{queryParam.CUSTOMER_NO}" />
 	</util:map>
-	
-	<bean id="aggregateStrategy" class="com.span.psrp.reportingsystem.aggregator.ReportingsystemAggregator" />
+
+	<bean id="aggregateStrategy"
+		class="com.span.psrp.reportingsystem.aggregator.ReportingsystemAggregator" />
 
 	<bean id="pdfBuilder" class="com.span.psrp.reportingsystem.pdf.PdfRouteBuilder" />
 
@@ -57,12 +60,11 @@
 		<route>
 			<from uri="direct:pdfgenerator" />
 			<bean ref="pdfBuilder" method="processPdf" />
-			<to uri="direct:filecopy" />
+			<to uri="mock:end" />
 		</route>
 		<route>
-			<from uri="direct:filecopy" />
-			<to uri="file:target/report-sample?noop=true" />
-			<to uri="file:C:/Users/jaganmohan_p/Desktop/report-system" />
+			<from uri="file://target/report?noop=true" />
+			<to uri="file:D:/pdf" />		
 		</route>
 	</camelContext>
 </beans>

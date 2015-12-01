@@ -34,8 +34,8 @@ public class ReportingsystemAggregator implements AggregationStrategy {
                     reportDetails.setCustomerInfo(customerInfo);
                 }
             }
+            newExchange.getOut().setBody(reportDetails);
         }
-        newExchange.getOut().setBody(reportDetails);
         return newExchange;
     }
 }

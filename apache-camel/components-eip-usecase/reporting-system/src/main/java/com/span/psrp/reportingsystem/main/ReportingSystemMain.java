@@ -19,7 +19,7 @@ public class ReportingSystemMain {
         System.out.println("Start camel context");
         appContext.start();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
