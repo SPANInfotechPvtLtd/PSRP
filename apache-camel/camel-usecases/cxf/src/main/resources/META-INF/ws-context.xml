@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/cxf"  xmlns:camel="http://camel.apache.org/schema/spring"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+       
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	
+		<route id="wsRoute">
+			<from uri="cxf:bean:productServiceEndpoint" />
+			<bean ref="productServiceImpl" /> 
+			<choice>
+            <when>
+                <simple>${headers.operationName} == 'getProductDetails'</simple>
+                    <!-- <bean ref="processor" method="processMessage"/>
+                <to uri="xslt:file:resources/service/2.0.0/UserRegistration.xsl"/> -->
+                <to uri="updateCustomer"></to>
+            </when>
+            <!-- <when>
+                <simple>${headers.operationName} == 'UpdateUser'</simple>
+                Do the update user logic here
+                <bean ref="processor" method="updateUser" />
+            </when> -->
+            </choice>       
+		</route>
+		<route id="wsClient">
+			<from uri="direct:start" />
+			<to
+				uri="cxf:bean:productServiceEndpoint?defaultOperationName=getProductDetails" />
+		</route> 
+	</camelContext>
+
+	<bean id="productServiceImpl" class="com.span.psrp.apache.camel.usecases.cxf.ProductServiceImpl"/>
+	
+	<bean id="updateCustomer" class="com.span.psrp.apache.camel.usecases.cxf.UpdateCustomerProcessor"/>
+ 
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" />
+
+	<cxf:cxfEndpoint id="productServiceEndpoint" address="http://localhost:${port1}/productService" 
+	     serviceClass="com.techiepassion.ws.product_service.Product" />
+
+</beans>
