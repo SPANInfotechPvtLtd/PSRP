@@ -12,7 +12,6 @@ public class ProductServiceImpl {
         if (product == null) {
             throw new ProductNotFoundException(request.getId());
         }
-
         ProductResponse response = new ProductResponse();
         response.setId(product.id);
         response.setDescription(product.description);
@@ -26,7 +25,6 @@ public class ProductServiceImpl {
     	private String id;
     	private String description;
     	private int price;
-    	
     	Product(String id, String desc, int price) {
     		this.id = id;
     		this.description = desc;

@@ -1,4 +1,4 @@
-package com.span.psrp.apache.camel.usecases.cxf.main;
+package com.span.psrp.apache.camel.usecases.cxf;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
@@ -10,15 +10,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.techiepassion.ws.product_service.types.ProductRequest;
 import com.techiepassion.ws.product_service.types.ProductResponse;
 
-public class CxfMain {
-	
+public class CamelCxfExample {
 	private static ProducerTemplate template;
 
 	public static void main(String[] args) throws Exception {
 		
 		System.setProperty("port1", "9000");
 		ApplicationContext appContext = new ClassPathXmlApplicationContext(
-				"META-INF/applicationContext.xml");
+				"META-INF/ws-context.xml");
 		CamelContext camelContext = SpringCamelContext.springCamelContext(
 				appContext, false);
 		try {
