@@ -1,6 +1,9 @@
 
 package com.span.psrp.reportingsystem.pdf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.span.psrp.reportingsystem.model.AccountInfo;
 import com.span.psrp.reportingsystem.model.CustomerInfo;
 
@@ -10,9 +13,26 @@ import com.span.psrp.reportingsystem.model.CustomerInfo;
  */
 public class ReportDetails {
 
-    private CustomerInfo customerInfo;
+    private CustomerInfo      customerInfo;
 
-    private AccountInfo  accountInfo;
+    private List<AccountInfo> accountInfo;
+
+    /**
+     * @return the accountInfo
+     */
+    public List<AccountInfo> getAccountInfo() {
+        if (accountInfo == null) {
+            accountInfo = new ArrayList<AccountInfo>();
+        }
+        return accountInfo;
+    }
+
+    /**
+     * @param accountInfo the accountInfo to set
+     */
+    public void setAccountInfo(final List<AccountInfo> accountInfo) {
+        this.accountInfo = accountInfo;
+    }
 
     /**
      * @return the customerInfo
@@ -28,17 +48,4 @@ public class ReportDetails {
         this.customerInfo = customerInfo;
     }
 
-    /**
-     * @return the accountInfo
-     */
-    public AccountInfo getAccountInfo() {
-        return accountInfo;
-    }
-
-    /**
-     * @param accountInfo the accountInfo to set
-     */
-    public void setAccountInfo(final AccountInfo accountInfo) {
-        this.accountInfo = accountInfo;
-    }
 }

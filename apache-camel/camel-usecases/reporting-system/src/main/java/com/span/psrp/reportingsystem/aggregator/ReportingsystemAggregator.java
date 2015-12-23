@@ -21,14 +21,15 @@ public class ReportingsystemAggregator implements AggregationStrategy {
                     reportDetails.setCustomerInfo(customerInfo);
                 }
                 if (null != accountInfo) {
-                    reportDetails.setAccountInfo(accountInfo);
+                    reportDetails.getAccountInfo().add(accountInfo);
+
                 }
             }
             if ((newExchange != null) || (newExchange.getIn() != null)) {
                 CustomerInfo customerInfo = newExchange.getIn().getBody(CustomerInfo.class);
                 AccountInfo accountInfo = newExchange.getIn().getBody(AccountInfo.class);
                 if (null != accountInfo) {
-                    reportDetails.setAccountInfo(accountInfo);
+                    reportDetails.getAccountInfo().add(accountInfo);
                 }
                 if (null != customerInfo) {
                     reportDetails.setCustomerInfo(customerInfo);
